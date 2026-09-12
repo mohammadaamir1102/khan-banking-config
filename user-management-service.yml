@@ -1,0 +1,51 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: user-management-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/user_db
+    username: ${DB_USER:banking}
+    password: ${DB_PASSWORD:banking}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/banking/protocol/openid-connect/certs}
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/banking}
+
+banking:
+  keycloak:
+    admin:
+      server-url: ${KEYCLOAK_URL:http://localhost:8180}
+      admin-realm: master
+      target-realm: banking
+      client-id: admin-cli
+      username: ${KEYCLOAK_ADMIN:admin}
+      password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      keycloak:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+  timelimiter:
+    instances:
+      keycloak:
+        timeoutDuration: 5s
