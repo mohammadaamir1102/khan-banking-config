@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/user_db
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/banking/protocol/openid-connect/certs
+          issuer-uri: http://keycloak:8080/realms/banking
+
+banking:
+  keycloak:
+    admin:
+      server-url: http://keycloak:8080
