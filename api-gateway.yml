@@ -41,3 +41,13 @@ banking:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    # Dropdown in the top-right of the UI to switch between services.
+    urls:
+      - name: account-service
+        url: /account/v3/api-docs
+      - name: user-management-service
+        url: /user/v3/api-docs
+      - name: loan-service
+        url: /loan/v3/api-docs
+      - name: card-service
+        url: /card/v3/api-docs
