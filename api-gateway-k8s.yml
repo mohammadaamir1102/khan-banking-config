@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          httpclient:
+            response-timeout: 10s
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+banking:
+  gateway:
+    namespace: banking
+    rate-limit-enabled: true
