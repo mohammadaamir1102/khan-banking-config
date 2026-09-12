@@ -1,0 +1,9 @@
+# Docker Compose profile: no Kubernetes API, so use static routes instead of discovery.
+banking:
+  gateway:
+    discovery-enabled: false
+    static-routes:
+      account: http://account-service:8080
+      loan: http://loan-service:8080
+      card: http://card-service:8080
+      user: http://user-management-service:8080

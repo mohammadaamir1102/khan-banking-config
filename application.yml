@@ -31,9 +31,14 @@ management:
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
-  otlp:
+  # Boot 4 property (was management.otlp.tracing.endpoint in Boot 3).
+  # The transport property must be set explicitly or the OTLP exporter bean is not created.
+  opentelemetry:
     tracing:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+          transport: http
   metrics:
     tags:
       application: ${spring.application.name}
