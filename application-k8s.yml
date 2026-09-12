@@ -1,0 +1,16 @@
+# 'k8s' profile defaults for all services running inside the cluster.
+# In-cluster DNS names are used; secrets come from Kubernetes Secrets.
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/banking}
+
+management:
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4318/v1/traces}
