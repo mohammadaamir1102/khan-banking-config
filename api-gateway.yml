@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          # Routes are produced dynamically from Kubernetes Services (see RouteDefinitionLocator).
+          # There is intentionally NO static route list here.
+          httpclient:
+            connect-timeout: 3000
+            response-timeout: 10s
+  data:
+    # Reactive Redis backing the distributed RequestRateLimiter.
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/banking/protocol/openid-connect/certs}
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/banking}
+
+banking:
+  gateway:
+    # Kubernetes namespace to watch for routable Services.
+    namespace: ${K8S_NAMESPACE:banking}
+    routing-label: banking.io/gateway
+    prefix-label: banking.io/route-prefix
+    # How often the informer resyncs even without events (ms).
+    resync-ms: 30000
+    # Redis-backed distributed rate limiting (shared across gateway pods).
+    rate-limit-enabled: ${RATE_LIMIT_ENABLED:false}
+    rate-limit-replenish-rate: 10
+    rate-limit-burst-capacity: 20
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
